@@ -1,23 +1,15 @@
 const inquirer = require('inquirer');
 const express = require('express');
-const mysql = require('mysql2');
+const Queries = require('./queries.js');
 
 const PORT = process.env.PORT || 3001;
 const app = express();
 
 const choices = ['View All Employees', 'Add Employee', 'Update Employee Role', 'View All Roles', 'Add Role', 'View All Department', 'Add Department', 'Quit'];
+const perform = new Queries();
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-
-const db = mysql.createConnection(
-    {
-        host: 'localhost',
-        user: 'root',
-        password: 'Root123',
-        database: 'company_db'
-    }
-);
 
 function inquire() {
     inquirer
@@ -32,23 +24,23 @@ function inquire() {
         .then((res) => {
             switch(res.choice) {
                 case 'View All Employees':
-                    viewEmployees();
+                    perform.viewEmployees();
                     break;
                 case 'Add Employee':
                     break;
                 case 'Update Employee Role':
                     break;
                 case 'View All Roles':
-                    viewRoles();
+                    perform.viewRoles();
                     break;
                 case 'Add Role':
                     break;
                 case 'View All Department':
-                    viewDepartments();
+                    process.viewDepartments();
                     break;
                 case 'Add Department':
                     break;
-                default:
+                case 'Quit':
                     console.log('Goodbye!');
                     process.exit();
             }
