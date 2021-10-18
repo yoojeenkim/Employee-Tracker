@@ -9,32 +9,41 @@ const db = mysql.createConnection(
     }
 );
 
-function Queries() {
-    this.viewEmployees = () => {
+class Queries {
+    viewEmployees = () => {
         db.promise().query('SELECT * FROM employees')
             .then( ([results, fields]) => {
                 console.table(results);
             })
             .catch((err) => {
                 console.error(err);
+            })
+            .then( () => {
+                db.end();
             });
     }
-    this.viewRoles = () => {
+    viewRoles = () => {
         db.promise().query('SELECT * FROM roles')
             .then( ([results, fields]) => {
                 console.table(results);
             })
             .catch((err) => {
                 console.error(err);
+            })
+            .then( () => {
+                db.end();
             });
     }
-    this.viewDepartments = () => {
+    viewDepartments = () => {
         db.promise().query('SELECT * FROM departments')
             .then( ([results, fields]) => {
                 console.table(results);
             })
             .catch((err) => {
                 console.error(err);
+            })
+            .then( () => {
+                db.end();
             });
     }
 }
