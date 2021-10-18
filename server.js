@@ -5,7 +5,7 @@ const mysql = require('mysql2');
 const PORT = process.env.PORT || 3001;
 const app = express();
 
-// const choices = ['View All Employees', 'Add Employee', 'Update Employee Role', 'View All Roles', 'Add Role', 'View All Department', 'Add Department', 'Quit'];
+const choices = ['View All Employees', 'Add Employee', 'Update Employee Role', 'View All Roles', 'Add Role', 'View All Department', 'Add Department', 'Quit'];
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
@@ -20,27 +20,36 @@ const db = mysql.createConnection(
     console.log(`Connected to the company_db database`)
 );
 
-// db.query('SELECT * FROM employee', function (err, results) {
-//     console.log(results);
+// db.query('SELECT * FROM roles', function (err, results) {
+//     console.table(results);
 // });
 
-db.query('SELECT * FROM roles', function (err, results) {
-    console.log(results);
-});
+// db.query('SELECT * FROM departments', function (err, results) {
+//     console.table(results);
+// });
+const viewEmployees = () => {
+    db.query('SELECT * FROM employees', function (err, results) {
+        console.table(results);
+    });
+}
 
-db.query('SELECT * FROM departments', function (err, results) {
-    console.log(results);
-});
-
-// inquirer
-//     .prompt([
-//         {
-//             type: 'list',
-//             message: 'What would you like to do?',
-//             choices: choices,
-//             name: 'list'
-//         }
-//     ])
+function init() {
+    inquirer
+        .prompt([
+            {
+                type: 'list',
+                message: 'What would you like to do?',
+                choices: choices,
+                name: 'choice'
+            }
+        ])
+        .then((res) => {
+            switch(res.choice) {
+                case 'View All Employees':
+                    viewEmployees();
+            }
+        })
+}
 
 app.use((req, res) => {
     res.status(404).end();
@@ -49,3 +58,5 @@ app.use((req, res) => {
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
+
+init();
