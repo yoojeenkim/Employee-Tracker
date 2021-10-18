@@ -1,5 +1,4 @@
 const express = require('express');
-const inquire = require('./inquire.js');
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -14,5 +13,3 @@ app.use((req, res) => {
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
-
-inquire();

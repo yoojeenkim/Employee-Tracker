@@ -18,9 +18,6 @@ class Queries {
             .catch((err) => {
                 console.error(err);
             })
-            .then( () => {
-                db.end();
-            });
     }
     viewRoles = () => {
         db.promise().query('SELECT * FROM roles')
@@ -30,9 +27,6 @@ class Queries {
             .catch((err) => {
                 console.error(err);
             })
-            .then( () => {
-                db.end();
-            });
     }
     viewDepartments = () => {
         db.promise().query('SELECT * FROM departments')
@@ -42,9 +36,6 @@ class Queries {
             .catch((err) => {
                 console.error(err);
             })
-            .then( () => {
-                db.end();
-            });
     }
 }
 
