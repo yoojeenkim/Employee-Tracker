@@ -16,24 +16,10 @@ const db = mysql.createConnection(
         user: 'root',
         password: 'Root123',
         database: 'company_db'
-    },
-    console.log(`Connected to the company_db database`)
+    }
 );
 
-// db.query('SELECT * FROM roles', function (err, results) {
-//     console.table(results);
-// });
-
-// db.query('SELECT * FROM departments', function (err, results) {
-//     console.table(results);
-// });
-const viewEmployees = () => {
-    db.query('SELECT * FROM employees', function (err, results) {
-        console.table(results);
-    });
-}
-
-function init() {
+function inquire() {
     inquirer
         .prompt([
             {
@@ -47,9 +33,31 @@ function init() {
             switch(res.choice) {
                 case 'View All Employees':
                     viewEmployees();
+                    break;
+                case 'Add Employee':
+                    break;
+                case 'Update Employee Role':
+                    break;
+                case 'View All Roles':
+                    viewRoles();
+                    break;
+                case 'Add Role':
+                    break;
+                case 'View All Department':
+                    viewDepartments();
+                    break;
+                case 'Add Department':
+                    break;
+                default:
+                    console.log('Goodbye!');
+                    process.exit();
             }
         })
 }
+
+// function init() {
+
+// }
 
 app.use((req, res) => {
     res.status(404).end();
@@ -59,4 +67,5 @@ app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
 
-init();
+// init();
+inquire();
