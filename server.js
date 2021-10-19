@@ -4,6 +4,17 @@ const Queries = require('./queries.js');
 const choices = ['View All Employees', 'Add Employee', 'Update Employee Role', 'View All Roles', 'Add Role', 'View All Department', 'Add Department', 'Quit'];
 const query = new Queries;
 
+function addDepartment() {
+    inquirer
+    .prompt([
+        {
+            type: 'input',
+            message: 'What is the name of the department?',
+            name: 'departmentname'
+        }
+    ])
+}
+
 function addRole() {
     inquirer
         .prompt([
@@ -28,6 +39,52 @@ function addRole() {
         })
 }
 
+function updateEmployee() {
+    inquirer
+        .prompt([
+            {
+                type: 'list',
+                message: `Which employee's role do you want to update?`,
+                name: 'updatename',
+                choices: ``
+            },
+            {
+                type: 'list',
+                message: `Which role do you want to assign the selected employee?`,
+                name: 'updaterole',
+                choices: ``
+            }
+        ])
+}
+
+function addEmployee() {
+    inquirer
+    .prompt([
+        {
+            type: 'input',
+            message: `What is the employee's first name?`,
+            name: 'firstname'
+        },
+        {
+            type: 'input',
+            message: `What is the employee's last name?`,
+            name: 'lastname'
+        },
+        {
+            type: 'list',
+            message: `What is the employee's role?`,
+            name: 'employeerole',
+            choices: ``
+        },
+        {
+            type: 'list',
+            message: `Who is the employee's manager?`,
+            name: 'employeemanager',
+            choices: ``
+        }
+    ])
+}
+
 function init() {
     inquirer
         .prompt([
@@ -47,7 +104,7 @@ function init() {
                     addEmployee();
                     break;
                 case 'Update Employee Role':
-                    query.updateEmployee();
+                    updateEmployee();
                     break;
                 case 'View All Roles':
                     query.viewRoles();
@@ -59,7 +116,7 @@ function init() {
                     query.viewDepartments();
                     break;
                 case 'Add Department':
-                    query.addDepartment();
+                    addDepartment();
                     break;
                 case 'Quit':
                     console.log('Goodbye!');
