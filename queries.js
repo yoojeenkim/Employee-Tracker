@@ -20,7 +20,7 @@ class Queries {
             })
     }
     addEmployee = () => {
-        db.promise().query('')
+        db.promise().query('INSERT INTO employees (first_name, las')
     }
     updateEmployee = () => {
         db.promise().query('')
@@ -34,8 +34,17 @@ class Queries {
                 console.error(err);
             })
     }
-    addRole = () => {
-        db.promise().query('')
+    addRole = (res) => {
+        const params = [res.rolename, res.rolesalary, res.roledepartment];
+
+        db.promise().query('INSERT INTO roles (title, salary, department_id) VALUES (?, ?, 4)', params, (err, result) => {
+            if (err) {
+                res.status(400).json({})
+            }
+        })
+        .catch((err) => {
+            console.error(err);
+        });
     }
     viewDepartments = () => {
         db.promise().query('SELECT * FROM departments')

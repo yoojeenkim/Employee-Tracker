@@ -2,7 +2,31 @@ const inquirer = require('inquirer');
 const Queries = require('./queries.js');
 
 const choices = ['View All Employees', 'Add Employee', 'Update Employee Role', 'View All Roles', 'Add Role', 'View All Department', 'Add Department', 'Quit'];
-const perform = new Queries;
+const query = new Queries;
+
+function addRole() {
+    inquirer
+        .prompt([
+            {
+                type: 'input',
+                message: 'What is the name of the role?',
+                name: 'rolename'
+            },
+            {
+                type: 'input',
+                message: 'What is the salary of the role?',
+                name: 'rolesalary'
+            },
+            {
+                type: 'input',
+                message: 'Which department does the role belong to?',
+                name: 'roledepartment'
+            }
+        ])
+        .then((res) => {
+            query.addRole(res);
+        })
+}
 
 function init() {
     inquirer
@@ -17,25 +41,25 @@ function init() {
         .then((res) => {
             switch(res.choice) {
                 case 'View All Employees':
-                    perform.viewEmployees();
+                    query.viewEmployees();
                     break;
                 case 'Add Employee':
-                    perform.addEmployee();
+                    addEmployee();
                     break;
                 case 'Update Employee Role':
-                    perform.updateEmployee();
+                    query.updateEmployee();
                     break;
                 case 'View All Roles':
-                    perform.viewRoles();
+                    query.viewRoles();
                     break;
                 case 'Add Role':
-                    perform.addRole();
+                    addRole();
                     break;
                 case 'View All Department':
-                    perform.viewDepartments();
+                    query.viewDepartments();
                     break;
                 case 'Add Department':
-                    perform.addDepartment();
+                    query.addDepartment();
                     break;
                 case 'Quit':
                     console.log('Goodbye!');
