@@ -1,18 +1,23 @@
 const inquirer = require('inquirer');
 const Queries = require('./queries.js');
 
-const choices = ['View All Employees', 'Add Employee', 'Update Employee Role', 'View All Roles', 'Add Role', 'View All Department', 'Add Department', 'Quit'];
 const query = new Queries;
 
 function addDepartment() {
     inquirer
-    .prompt([
-        {
-            type: 'input',
-            message: 'What is the name of the department?',
-            name: 'departmentname'
-        }
-    ])
+        .prompt([
+            {
+                type: 'input',
+                message: 'What is the name of the department?',
+                name: 'departmentname'
+            }
+        ])
+        .then((res) => {
+            query.addDepartment(res);
+        })
+        .catch((err) => {
+            console.error(err);
+        });
 }
 
 function addRole() {
@@ -37,9 +42,15 @@ function addRole() {
         .then((res) => {
             query.addRole(res);
         })
+        .catch((err) => {
+            console.error(err);
+        });
 }
 
 function updateEmployee() {
+    // const employees = callEmployees();
+    // const roles = callRoles();
+
     inquirer
         .prompt([
             {
@@ -55,37 +66,54 @@ function updateEmployee() {
                 choices: ``
             }
         ])
+        .then((res) => {
+            query.updateEmployee();
+        })
+        .catch((err) => {
+            console.error(err);
+        });
 }
 
 function addEmployee() {
+    // const roles = query.callRoles(); is an array of roles
+    // const employees = query.callEmployees(); is an array of employees
+
     inquirer
-    .prompt([
-        {
-            type: 'input',
-            message: `What is the employee's first name?`,
-            name: 'firstname'
-        },
-        {
-            type: 'input',
-            message: `What is the employee's last name?`,
-            name: 'lastname'
-        },
-        {
-            type: 'list',
-            message: `What is the employee's role?`,
-            name: 'employeerole',
-            choices: ``
-        },
-        {
-            type: 'list',
-            message: `Who is the employee's manager?`,
-            name: 'employeemanager',
-            choices: ``
-        }
-    ])
+        .prompt([
+            {
+                type: 'input',
+                message: `What is the employee's first name?`,
+                name: 'firstname'
+            },
+            {
+                type: 'input',
+                message: `What is the employee's last name?`,
+                name: 'lastname'
+            },
+            {
+                type: 'list',
+                message: `What is the employee's role?`,
+                name: 'employeerole',
+                choices: ``
+            },
+            {
+                type: 'list',
+                message: `Who is the employee's manager?`,
+                name: 'employeemanager',
+                choices: ``
+            }
+        ])
+        .then((res) => {
+            query.addEmployee();
+        })
+        .catch((err) => {
+            console.error(err);
+        });
 }
 
 function init() {
+    const choices = ['View All Employees', 'Add Employee', 'Update Employee Role', 'View All Roles', 'Add Role', 'View All Department', 'Add Department', 'Quit'];
+
     inquirer
         .prompt([
             {

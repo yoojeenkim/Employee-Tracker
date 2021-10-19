@@ -17,13 +17,19 @@ class Queries {
             })
             .catch((err) => {
                 console.error(err);
-            })
+            });
     }
-    addEmployee = () => {
-        db.promise().query('INSERT INTO employees (first_name, las')
+    addEmployee = (res) => {
+        const params = [];
+        db.promise().query('INSERT INTO employees', params, (err, result) => {
+
+        });
     }
-    updateEmployee = () => {
-        db.promise().query('')
+    updateEmployee = (res) => {
+        const params = [];
+        db.promise().query('UPDATE  SET ', params, (err, result) => {
+
+        });
     }
     viewRoles = () => {
         db.promise().query('SELECT * FROM roles')
@@ -32,7 +38,7 @@ class Queries {
             })
             .catch((err) => {
                 console.error(err);
-            })
+            });
     }
     addRole = (res) => {
         const params = [res.rolename, res.rolesalary, res.roledepartment];
@@ -53,10 +59,32 @@ class Queries {
             })
             .catch((err) => {
                 console.error(err);
-            })
+            });
     }
-    addDepartment = () => {
-        db.promise().query('')
+    addDepartment = (res) => {
+        const params = [];
+
+        db.promise().query('INSERT INTO departments', params, (err, result) => {
+
+        });
+    }
+    callEmployees = () => {
+        db.promise().query('SELECT employees.first_name, employees.last_name FROM employees')
+            .then( ([results, fields]) => {
+                return results;
+            })
+            .catch((err) => {
+                console.error(err);
+            });
+    }
+    callRoles = () => {
+        db.promise().query('SELECT roles.title FROM roles')
+            .then( ([results, fields]) => {
+                return results;
+            })
+            .catch((err) => {
+                console.error(err);
+            });
     }
 }
 
