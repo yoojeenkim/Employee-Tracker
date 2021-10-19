@@ -19,6 +19,12 @@ class Queries {
                 console.error(err);
             })
     }
+    addEmployee = () => {
+        db.promise().query('')
+    }
+    updateEmployee = () => {
+        db.promise().query('')
+    }
     viewRoles = () => {
         db.promise().query('SELECT * FROM roles')
             .then( ([results, fields]) => {
@@ -28,6 +34,9 @@ class Queries {
                 console.error(err);
             })
     }
+    addRole = () => {
+        db.promise().query('')
+    }
     viewDepartments = () => {
         db.promise().query('SELECT * FROM departments')
             .then( ([results, fields]) => {
@@ -36,6 +45,9 @@ class Queries {
             .catch((err) => {
                 console.error(err);
             })
+    }
+    addDepartment = () => {
+        db.promise().query('')
     }
 }
 
