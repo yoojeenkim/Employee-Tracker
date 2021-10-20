@@ -20,15 +20,26 @@ class Queries {
             });
     }
     addEmployee = (res) => {
-        const params = [];
-        db.promise().query('INSERT INTO employees', params, (err, result) => {
+        const params = [res.firstname, res.lastname, res.employeerole, res.employeemanager];
 
+        db.promise().query('INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)', params, (err, result) => {
+            if (err) {
+                res.status(400).json({})
+            }
+        })
+        .catch((err) => {
+            console.error(err);
         });
     }
     updateEmployee = (res) => {
         const params = [];
-        db.promise().query('UPDATE  SET ', params, (err, result) => {
-
+        db.promise().query('UPDATE employees SET role_id = ? WHERE first_name = ?', params, (err, result) => {
+            if (err) {
+                res.status(400).json({})
+            }
+        })
+        .catch((err) => {
+            console.error(err);
         });
     }
     viewRoles = () => {
@@ -62,35 +73,23 @@ class Queries {
             });
     }
     addDepartment = (res) => {
-        const params = [];
+        const params = [res.departmentname];
 
-        db.promise().query('INSERT INTO departments', params, (err, result) => {
-
+        db.promise().query('INSERT INTO departments (name) VALUES (?)', params, (err, result) => {
+            if (err) {
+                res.status(400).json({})
+            }
+        })
+        .catch((err) => {
+            console.error(err);
         });
     }
-    // callEmployees = () => {
-    //     const callEmployee = db.promise().query('SELECT employees.first_name, employees.last_name FROM employees')
-    //         .then( ([results, fields]) => {
-    //             const fullNames = [];
-    //             for (let i=0; i < results.length; i++) {
-    //                 const firstName = results[i].first_name;
-    //                 const lastName = results[i].last_name;
-    //                 fullNames.push(firstName + " " + lastName);
-    //                 return fullNames;
-    //             }
-    //         })
-    //     return callEmployee;
-    // }
-    // callRoles = (data,callback) => {
-    //     db.promise().query('SELECT roles.title FROM roles')
-    //         .then( ([results, fields]) => {
-    //             const roles = [''];
-    //             for (let i=0; i < results.length; i++) {
-    //                 roles.push(results[i].title);
-    //             }
-    //         })
-    //         return callback(roles);
-    // }
+    importEmployees(res) {
+        console.log(res);
+    }
+    importRoles(res) {
+        console.log(res);
+    }
 }
 
 module.exports = Queries;

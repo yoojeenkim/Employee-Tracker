@@ -1,7 +1,18 @@
 const inquirer = require('inquirer');
 const Queries = require('./db/queries.js');
+const mysql = require('mysql2');
 
-const query = new Queries;
+const db = mysql.createConnection(
+    {
+        host: 'localhost',
+        user: 'root',
+        password: 'Root123',
+        database: 'company_db',
+        multipleStatements: true
+    }
+);
+
+const call = new Queries;
 
 function addDepartment() {
     inquirer
@@ -13,7 +24,7 @@ function addDepartment() {
             }
         ])
         .then((res) => {
-            query.addDepartment(res);
+            call.addDepartment(res);
         })
         .catch((err) => {
             console.error(err);
@@ -34,13 +45,14 @@ function addRole() {
                 name: 'rolesalary'
             },
             {
-                type: 'input',
+                type: 'list',
                 message: 'Which department does the role belong to?',
-                name: 'roledepartment'
+                name: 'roledepartment',
+                choices: ''
             }
         ])
         .then((res) => {
-            query.addRole(res);
+            call.addRole(res);
         })
         .catch((err) => {
             console.error(err);
@@ -48,27 +60,43 @@ function addRole() {
 }
 
 function updateEmployee() {
-    inquirer
-        .prompt([
-            {
-                type: 'list',
-                message: `Which employee's role do you want to update?`,
-                name: 'updatename',
-                choices: ''
-            },
-            {
-                type: 'list',
-                message: `Which role do you want to assign the selected employee?`,
-                name: 'updaterole',
-                choices: ''
-            }
-        ])
-        .then((res) => {
-            query.updateEmployee();
-        })
-        .catch((err) => {
+    const sql = `SELECT title FROM roles;SELECT CONCAT(first_name," ",last_name) AS fullname FROM employees`;
+    db.query(sql, (err, results) => {
+        if (err) {
             console.error(err);
-        });
+        }
+
+        console.log(results[0]);
+        console.log(results[1]);
+
+        inquirer
+            .prompt([
+                {
+                    type: 'list',
+                    message: `Which employee's role do you want to update?`,
+                    name: 'updatename',
+                    choices: function() {
+                        let roles = results[0].map(choice => choice.title);
+                        return roles;
+                    }
+                },
+                {
+                    type: 'list',
+                    message: `Which role do you want to assign the selected employee?`,
+                    name: 'updaterole',
+                    choices: function() {
+                        let employees = results[1].map(choice => choice.full_name);
+                        return employees;
+                    }
+                }
+            ])
+            .then((res) => {
+                call.updateEmployee();
+            })
+            .catch((err) => {
+                console.error(err);
+            });
+    })
 }
 
 function addEmployee() {
@@ -98,7 +126,7 @@ function addEmployee() {
             }
         ])
         .then((res) => {
-            query.addEmployee();
+            call.addEmployee();
         })
         .catch((err) => {
             console.error(err);
@@ -120,7 +148,7 @@ function init() {
         .then((res) => {
             switch(res.choice) {
                 case 'View All Employees':
-                    query.viewEmployees();
+                    call.viewEmployees();
                     break;
                 case 'Add Employee':
                     addEmployee();
@@ -129,13 +157,13 @@ function init() {
                     updateEmployee();
                     break;
                 case 'View All Roles':
-                    query.viewRoles();
+                    call.viewRoles();
                     break;
                 case 'Add Role':
                     addRole();
                     break;
                 case 'View All Department':
-                    query.viewDepartments();
+                    call.viewDepartments();
                     break;
                 case 'Add Department':
                     addDepartment();
