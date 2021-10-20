@@ -1,5 +1,5 @@
 const inquirer = require('inquirer');
-const Queries = require('./queries.js');
+const Queries = require('./db/queries.js');
 
 const query = new Queries;
 
@@ -48,22 +48,19 @@ function addRole() {
 }
 
 function updateEmployee() {
-    // const employees = callEmployees();
-    // const roles = callRoles();
-
     inquirer
         .prompt([
             {
                 type: 'list',
                 message: `Which employee's role do you want to update?`,
                 name: 'updatename',
-                choices: ``
+                choices: ''
             },
             {
                 type: 'list',
                 message: `Which role do you want to assign the selected employee?`,
                 name: 'updaterole',
-                choices: ``
+                choices: ''
             }
         ])
         .then((res) => {
@@ -75,9 +72,6 @@ function updateEmployee() {
 }
 
 function addEmployee() {
-    // const roles = query.callRoles(); is an array of roles
-    // const employees = query.callEmployees(); is an array of employees
-
     inquirer
         .prompt([
             {
@@ -94,13 +88,13 @@ function addEmployee() {
                 type: 'list',
                 message: `What is the employee's role?`,
                 name: 'employeerole',
-                choices: ``
+                choices: ''
             },
             {
                 type: 'list',
                 message: `Who is the employee's manager?`,
                 name: 'employeemanager',
-                choices: ``
+                choices: ''
             }
         ])
         .then((res) => {
@@ -112,7 +106,7 @@ function addEmployee() {
 }
 
 function init() {
-    const choices = ['View All Employees', 'Add Employee', 'Update Employee Role', 'View All Roles', 'Add Role', 'View All Department', 'Add Department', 'Quit'];
+    const choices = ['View All Employees', 'Add Employee', 'Update Employee Role', 'View All Roles', 'Add Role', 'View All Departments', 'Add Department', 'Quit'];
 
     inquirer
         .prompt([

@@ -43,7 +43,7 @@ class Queries {
     addRole = (res) => {
         const params = [res.rolename, res.rolesalary, res.roledepartment];
 
-        db.promise().query('INSERT INTO roles (title, salary, department_id) VALUES (?, ?, 4)', params, (err, result) => {
+        db.promise().query('INSERT INTO roles (title, salary, department_id) VALUES (?, ?, ?)', params, (err, result) => {
             if (err) {
                 res.status(400).json({})
             }
@@ -68,24 +68,29 @@ class Queries {
 
         });
     }
-    callEmployees = () => {
-        db.promise().query('SELECT employees.first_name, employees.last_name FROM employees')
-            .then( ([results, fields]) => {
-                return results;
-            })
-            .catch((err) => {
-                console.error(err);
-            });
-    }
-    callRoles = () => {
-        db.promise().query('SELECT roles.title FROM roles')
-            .then( ([results, fields]) => {
-                return results;
-            })
-            .catch((err) => {
-                console.error(err);
-            });
-    }
+    // callEmployees = () => {
+    //     const callEmployee = db.promise().query('SELECT employees.first_name, employees.last_name FROM employees')
+    //         .then( ([results, fields]) => {
+    //             const fullNames = [];
+    //             for (let i=0; i < results.length; i++) {
+    //                 const firstName = results[i].first_name;
+    //                 const lastName = results[i].last_name;
+    //                 fullNames.push(firstName + " " + lastName);
+    //                 return fullNames;
+    //             }
+    //         })
+    //     return callEmployee;
+    // }
+    // callRoles = (data,callback) => {
+    //     db.promise().query('SELECT roles.title FROM roles')
+    //         .then( ([results, fields]) => {
+    //             const roles = [''];
+    //             for (let i=0; i < results.length; i++) {
+    //                 roles.push(results[i].title);
+    //             }
+    //         })
+    //         return callback(roles);
+    // }
 }
 
 module.exports = Queries;
