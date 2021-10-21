@@ -10,19 +10,10 @@ const db = mysql.createConnection(
 );
 
 class Queries {
-    viewEmployees = () => {
-        db.promise().query(`SELECT E.id, E.first_name, E.last_name, R.title, R.salary, D.name AS "department" FROM employees E LEFT JOIN roles R ON R.id = E.role_id LEFT JOIN departments D ON D.id = R.department_id;`)
-            .then( ([results, fields]) => {
-                console.table(results);
-            })
-            .catch((err) => {
-                console.error(err);
-            });
-    }
     addEmployee = (res) => {
         const params = [res.firstname, res.lastname, res.employeerole, res.employeemanager];
 
-        db.promise().query('INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)', params, (err, result) => {
+        db.promise().query(`INSERT INTO employees(first_name, last_name, role_id, manager_id) VALUES(?, ?, (SELECT id FROM roles WHERE title = ? ), (SELECT id FROM (SELECT id FROM employees WHERE CONCAT(first_name," ",last_name) = ? ) AS tmptable))`, params, (err, result) => {
             if (err) {
                 res.status(400).json({})
             }
@@ -32,8 +23,8 @@ class Queries {
         });
     }
     updateEmployee = (res) => {
-        const params = [];
-        db.promise().query('UPDATE employees SET role_id = ? WHERE first_name = ?', params, (err, result) => {
+        const params = [res.updatename, res.updaterole];
+        db.promise().query(`UPDATE employees SET role_id = (SELECT id FROM roles WHERE title = ? ) WHERE id = (SELECT id FROM(SELECT id FROM employees WHERE CONCAT(first_name," ",last_name) = ?) AS tmptable)`, params, (err, result) => {
             if (err) {
                 res.status(400).json({})
             }
@@ -41,20 +32,11 @@ class Queries {
         .catch((err) => {
             console.error(err);
         });
-    }
-    viewRoles = () => {
-        db.promise().query('SELECT R.id, R.title, R.salary, D.name AS "deparment" FROM roles R LEFT JOIN departments D ON D.id = R.department_id;')
-            .then( ([results, fields]) => {
-                console.table(results);
-            })
-            .catch((err) => {
-                console.error(err);
-            });
     }
     addRole = (res) => {
         const params = [res.rolename, res.rolesalary, res.roledepartment];
 
-        db.promise().query('INSERT INTO roles (title, salary, department_id) VALUES (?, ?, ?)', params, (err, result) => {
+        db.promise().query(`INSERT INTO roles(title, salary, department_id) VALUES ("${res.rolename}", "${res.rolesalary}",(SELECT id FROM departments WHERE department_name = "${res.roledepartment}"));`, params, (err, result) => {
             if (err) {
                 res.status(400).json({})
             }
@@ -62,15 +44,6 @@ class Queries {
         .catch((err) => {
             console.error(err);
         });
-    }
-    viewDepartments = () => {
-        db.promise().query('SELECT * FROM departments')
-            .then( ([results, fields]) => {
-                console.table(results);
-            })
-            .catch((err) => {
-                console.error(err);
-            });
     }
     addDepartment = (res) => {
         const params = [res.departmentname];

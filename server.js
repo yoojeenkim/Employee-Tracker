@@ -24,8 +24,21 @@ function addDepartment() {
             }
         ])
         .then((res) => {
-            // call.addDepartment(res);
-            console.log(res);
+            call.addDepartment(res);
+            console.log(`Successfully added ${res.departmentname}`);
+        })
+        .catch((err) => {
+            console.error(err);
+        })
+        .then( () => {
+            init();
+        });
+}
+
+function viewDepartments() {
+    db.promise().query('SELECT * FROM departments')
+        .then( ([results, fields]) => {
+            console.table(results);
         })
         .catch((err) => {
             console.error(err);
@@ -65,8 +78,8 @@ function addRole() {
                 }
             ])
             .then((res) => {
-                // call.addRole(res);
-                console.log(res);
+                call.addRole(res);
+                console.log(`Sucessfully added ${res.rolename}`);
             })
             .catch((err) => {
                 console.error(err);
@@ -77,8 +90,21 @@ function addRole() {
     })
 }
 
+function viewRoles() {
+    db.promise().query('SELECT R.id, R.title, R.salary, D.name AS "deparment" FROM roles R LEFT JOIN departments D ON D.id = R.department_id;')
+        .then( ([results, fields]) => {
+            console.table(results);
+        })
+        .catch((err) => {
+            console.error(err);
+        })
+        .then( () => {
+            init();
+        });
+}
+
 function updateEmployee() {
-    const sql = `SELECT title FROM roles;SELECT CONCAT(first_name," ",last_name) AS fullname FROM employees`;
+    const sql = `SELECT CONCAT(first_name," ",last_name) AS fullname FROM employees;SELECT title FROM roles`;
     db.query(sql, (err, results) => {
         if (err) {
             console.error(err);
@@ -91,8 +117,8 @@ function updateEmployee() {
                     message: `Which employee's role do you want to update?`,
                     name: 'updatename',
                     choices: function() {
-                        let roles = results[0].map(choice => choice.title);
-                        return roles;
+                        let employees = results[0].map(choice => choice.title);
+                        return employees;
                     }
                 },
                 {
@@ -100,14 +126,14 @@ function updateEmployee() {
                     message: `Which role do you want to assign the selected employee?`,
                     name: 'updaterole',
                     choices: function() {
-                        let employees = results[1].map(choice => choice.fullname);
-                        return employees;
+                        let roles = results[1].map(choice => choice.fullname);
+                        return roles;
                     }
                 }
             ])
             .then((res) => {
-                // call.updateEmployee(res);
-                console.log(res);
+                call.updateEmployee(res);
+                console.log(`Successfully updated ${res.updatename}'s role`);
             })
             .catch((err) => {
                 console.error(err);
@@ -157,8 +183,8 @@ function addEmployee() {
                 }
             ])
             .then((res) => {
-                // call.addEmployee(res);
-                console.log(res);
+                call.addEmployee(res);
+                console.log(`Successfully added ${res.firstname} ${res.lastname}`);
             })
             .catch((err) => {
                 console.error(err);
@@ -167,6 +193,19 @@ function addEmployee() {
                 init();
             });
     })
+}
+
+function viewEmployees() {
+    db.promise().query(`SELECT E.id, E.first_name, E.last_name, R.title, R.salary, D.name AS "department" FROM employees E LEFT JOIN roles R ON R.id = E.role_id LEFT JOIN departments D ON D.id = R.department_id;`)
+        .then( ([results, fields]) => {
+            console.table(results);
+        })
+        .catch((err) => {
+            console.error(err);
+        })
+        .then( () => {
+            init();
+        });
 }
 
 function init() {
@@ -184,7 +223,7 @@ function init() {
         .then((res) => {
             switch(res.choice) {
                 case 'View All Employees':
-                    call.viewEmployees();
+                    viewEmployees();
                     break;
                 case 'Add Employee':
                     addEmployee();
@@ -193,13 +232,13 @@ function init() {
                     updateEmployee();
                     break;
                 case 'View All Roles':
-                    call.viewRoles();
+                    viewRoles();
                     break;
                 case 'Add Role':
                     addRole();
                     break;
                 case 'View All Departments':
-                    call.viewDepartments();
+                    viewDepartments();
                     break;
                 case 'Add Department':
                     addDepartment();
