@@ -11,7 +11,7 @@ const db = mysql.createConnection(
 
 class Queries {
     viewEmployees = () => {
-        db.promise().query('SELECT * FROM employees')
+        db.promise().query(`SELECT E.id, E.first_name, E.last_name, R.title, R.salary, D.name AS "department" FROM employees E LEFT JOIN roles R ON R.id = E.role_id LEFT JOIN departments D ON D.id = R.department_id;`)
             .then( ([results, fields]) => {
                 console.table(results);
             })
@@ -43,7 +43,7 @@ class Queries {
         });
     }
     viewRoles = () => {
-        db.promise().query('SELECT * FROM roles')
+        db.promise().query('SELECT R.id, R.title, R.salary, D.name AS "deparment" FROM roles R LEFT JOIN departments D ON D.id = R.department_id;')
             .then( ([results, fields]) => {
                 console.table(results);
             })
@@ -83,12 +83,6 @@ class Queries {
         .catch((err) => {
             console.error(err);
         });
-    }
-    importEmployees(res) {
-        console.log(res);
-    }
-    importRoles(res) {
-        console.log(res);
     }
 }
 

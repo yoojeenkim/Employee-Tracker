@@ -24,39 +24,57 @@ function addDepartment() {
             }
         ])
         .then((res) => {
-            call.addDepartment(res);
+            // call.addDepartment(res);
+            console.log(res);
         })
         .catch((err) => {
             console.error(err);
+        })
+        .then( () => {
+            init();
         });
 }
 
 function addRole() {
-    inquirer
-        .prompt([
-            {
-                type: 'input',
-                message: 'What is the name of the role?',
-                name: 'rolename'
-            },
-            {
-                type: 'input',
-                message: 'What is the salary of the role?',
-                name: 'rolesalary'
-            },
-            {
-                type: 'list',
-                message: 'Which department does the role belong to?',
-                name: 'roledepartment',
-                choices: ''
-            }
-        ])
-        .then((res) => {
-            call.addRole(res);
-        })
-        .catch((err) => {
+    const sql = `SELECT title FROM roles`;
+    db.query(sql, (err, results) => {
+        if (err) {
             console.error(err);
-        });
+        }
+
+        inquirer
+            .prompt([
+                {
+                    type: 'input',
+                    message: 'What is the name of the role?',
+                    name: 'rolename'
+                },
+                {
+                    type: 'input',
+                    message: 'What is the salary of the role?',
+                    name: 'rolesalary'
+                },
+                {
+                    type: 'list',
+                    message: 'Which department does the role belong to?',
+                    name: 'roledepartment',
+                    choices: function() {
+                        let roles = results.map(choice => choice.title);
+                        return roles;
+                    }
+                }
+            ])
+            .then((res) => {
+                // call.addRole(res);
+                console.log(res);
+            })
+            .catch((err) => {
+                console.error(err);
+            })
+            .then( () => {
+                init();
+            });
+    })
 }
 
 function updateEmployee() {
@@ -65,9 +83,6 @@ function updateEmployee() {
         if (err) {
             console.error(err);
         }
-
-        console.log(results[0]);
-        console.log(results[1]);
 
         inquirer
             .prompt([
@@ -85,52 +100,73 @@ function updateEmployee() {
                     message: `Which role do you want to assign the selected employee?`,
                     name: 'updaterole',
                     choices: function() {
-                        let employees = results[1].map(choice => choice.full_name);
+                        let employees = results[1].map(choice => choice.fullname);
                         return employees;
                     }
                 }
             ])
             .then((res) => {
-                call.updateEmployee();
+                // call.updateEmployee(res);
+                console.log(res);
             })
             .catch((err) => {
                 console.error(err);
+            })
+            .then( () => {
+                init();
             });
     })
 }
 
 function addEmployee() {
-    inquirer
-        .prompt([
-            {
-                type: 'input',
-                message: `What is the employee's first name?`,
-                name: 'firstname'
-            },
-            {
-                type: 'input',
-                message: `What is the employee's last name?`,
-                name: 'lastname'
-            },
-            {
-                type: 'list',
-                message: `What is the employee's role?`,
-                name: 'employeerole',
-                choices: ''
-            },
-            {
-                type: 'list',
-                message: `Who is the employee's manager?`,
-                name: 'employeemanager',
-                choices: ''
-            }
-        ])
-        .then((res) => {
-            call.addEmployee();
-        })
-        .catch((err) => {
+    const sql = `SELECT title FROM roles;SELECT CONCAT(first_name," ",last_name) AS fullname FROM employees`;
+    db.query(sql, (err, results) => {
+        if (err) {
             console.error(err);
-        });
+        }
+
+        inquirer
+            .prompt([
+                {
+                    type: 'input',
+                    message: `What is the employee's first name?`,
+                    name: 'firstname'
+                },
+                {
+                    type: 'input',
+                    message: `What is the employee's last name?`,
+                    name: 'lastname'
+                },
+                {
+                    type: 'list',
+                    message: `What is the employee's role?`,
+                    name: 'employeerole',
+                    choices: function() {
+                        let roles = results[0].map(choice => choice.title);
+                        return roles;
+                    }
+                },
+                {
+                    type: 'list',
+                    message: `Who is the employee's manager?`,
+                    name: 'employeemanager',
+                    choices: function() {
+                        let employees = results[1].map(choice => choice.fullname);
+                        return employees;
+                    }
+                }
+            ])
+            .then((res) => {
+                // call.addEmployee(res);
+                console.log(res);
+            })
+            .catch((err) => {
+                console.error(err);
+            })
+            .then( () => {
+                init();
+            });
+    })
 }
 
 function init() {
@@ -162,7 +198,7 @@ function init() {
                 case 'Add Role':
                     addRole();
                     break;
-                case 'View All Department':
+                case 'View All Departments':
                     call.viewDepartments();
                     break;
                 case 'Add Department':
