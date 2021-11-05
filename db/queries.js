@@ -1,13 +1,4 @@
-const mysql = require('mysql2');
-
-const db = mysql.createConnection(
-    {
-        host: 'localhost',
-        user: 'root',
-        password: 'Root123',
-        database: 'company_db'
-    }
-);
+const db = require("./connection");
 
 class Queries {
     addEmployee = (res) => {

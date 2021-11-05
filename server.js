@@ -1,16 +1,6 @@
 const inquirer = require('inquirer');
-const Queries = require('./db/queries.js');
-const mysql = require('mysql2');
-
-const db = mysql.createConnection(
-    {
-        host: 'localhost',
-        user: 'root',
-        password: 'Root123',
-        database: 'company_db',
-        multipleStatements: true
-    }
-);
+const Queries = require('./db/queries');
+const db = require("./db/connection");
 
 const call = new Queries;
 
